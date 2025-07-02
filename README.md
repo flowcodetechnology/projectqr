@@ -119,10 +119,5 @@ For usage rights or commercial licensing, please contact the author directly.
 
 ---
 
-## 🌐 Live Demo / Documentation
-
-Official documentation is available at: [https://66biolinks.com/docs](https://66biolinks.com/docs)  
-(This serves as a general reference for system behavior and configuration.)
-
 ---
 
