@@ -28,13 +28,13 @@ class Link extends Controller {
         $biolink_blocks = require APP_PATH . 'includes/biolink_blocks.php';
         $links_types = require APP_PATH . 'includes/links_types.php';
 
-        $this->link->settings = json_decode($this->link->settings ?? '');
+        $this->link->settings = json_decode($this->link->settings ?? '{}');
         $this->link->pixels_ids = json_decode($this->link->pixels_ids ?? '[]');
         $this->link->email_reports = json_decode($this->link->email_reports ?? '[]');
 
         if($this->link->type == 'flipbook') {
             $flipbook = db()->where('link_id', $this->link->link_id)->getOne('flipbooks');
-            if($flipbook) {
+            if($flipbook && is_object($this->link->settings)) {
                 foreach($flipbook as $key => $value) {
                     $this->link->settings->{$key} = $value;
                 }
