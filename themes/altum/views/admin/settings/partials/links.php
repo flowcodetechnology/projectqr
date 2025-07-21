@@ -206,6 +206,13 @@
             <label class="custom-control-label" for="static_is_enabled"><?= l('admin_settings.links.static_is_enabled') ?></label>
             <small class="form-text text-muted"><?= l('admin_settings.links.static_is_enabled_help') ?></small>
         </div>
+                <!-- START of new code block -->
+        <div class="form-group custom-control custom-switch">
+            <input id="flipbooks_is_enabled" name="flipbooks_is_enabled" type="checkbox" class="custom-control-input" <?= settings()->links->flipbooks_is_enabled ? 'checked="checked"' : null?>>
+            <label class="custom-control-label" for="flipbooks_is_enabled"><?= l('admin_settings.links.flipbooks_is_enabled') ?></label>
+            <small class="form-text text-muted"><?= l('admin_settings.links.flipbooks_is_enabled_help') ?></small>
+        </div>
+        <!-- END of new code block -->
 
         <div class="form-group custom-control custom-switch">
             <input id="claim_url_is_enabled" name="claim_url_is_enabled" type="checkbox" class="custom-control-input" <?= settings()->links->claim_url_is_enabled ? 'checked="checked"' : null?>>
@@ -216,7 +223,7 @@
         <div class="form-group">
             <label for="claim_url_type"><?= l('admin_settings.links.claim_url_type') ?></label>
             <select id="claim_url_type" name="claim_url_type" class="custom-select">
-                <?php foreach(['link', 'biolink', 'file', 'vcard', 'event', 'static'] as $type): ?>
+                <?php foreach(['link', 'biolink', 'file', 'vcard', 'event', 'static', 'flipbook'] as $type): ?>
                 <option value="<?= $type ?>" <?= settings()->links->claim_url_type == $type ? 'selected="selected"' : null ?>><?= l('link.breadcrumb.' . $type) ?></option>
                 <?php endforeach ?>
             </select>
@@ -348,7 +355,7 @@
     </button>
 
     <div class="collapse" id="file_size_limits_container">
-        <?php foreach(['avatar', 'background', 'favicon', 'seo_image', 'thumbnail_image', 'image', 'audio', 'video', 'file', 'product_file', 'static', 'pwa_icon'] as $key): ?>
+        <?php foreach(['avatar', 'background', 'favicon', 'seo_image', 'thumbnail_image', 'image', 'audio', 'video', 'file', 'product_file', 'static','flipbooks', 'pwa_icon'] as $key): ?>
             <div class="form-group">
                 <label for="<?= $key . '_size_limit' ?>"><?= l('admin_settings.links.' . $key . '_size_limit') ?></label>
                 <div class="input-group">

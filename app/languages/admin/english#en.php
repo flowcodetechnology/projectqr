@@ -1,18 +1,5 @@
 <?php
-/*
- * Copyright (c) 2025 AltumCode (https://altumcode.com/)
- *
- * This software is licensed exclusively by AltumCode and is sold only via https://altumcode.com/.
- * Unauthorized distribution, modification, or use of this software without a valid license is not permitted and may be subject to applicable legal actions.
- *
- * 🌍 View all other existing AltumCode projects via https://altumcode.com/
- * 📧 Get in touch for support or general queries via https://altumcode.com/contact
- * 📤 Download the latest version via https://altumcode.com/downloads
- *
- * 🐦 X/Twitter: https://x.com/AltumCode
- * 📘 Facebook: https://facebook.com/altumcode
- * 📸 Instagram: https://instagram.com/altumcode
- */
+
 
 return [
     'admin_blog.menu' => 'Blog',
@@ -2016,4 +2003,16 @@ return [
     'admin_notification_handlers.title' => 'Notification handlers',
     'admin_notification_handlers.header' => 'Notification handlers',
     'admin_notification_handlers.menu' => 'Notif. handlers',
+
+        /*
+    * Flipbooks
+    */
+    'admin_settings.links.flipbooks_is_enabled' => 'Enable the flipbooks system',
+    'admin_settings.links.flipbooks_is_enabled_help' => 'Enabling this will give your users the ability to create and share PDF flipbooks.',
+    'admin_settings.links.flipbooks_file_size_limit' => 'Flipbook PDF file size limit',
+    'admin_plans.plan.flipbooks_limit' => 'Flipbooks Limit',
+    'admin_plans.plan.flipbooks_limit_help' => 'The total amount of flipbook links that a user can create. Set -1 for unlimited.',
+    'admin_plans.plan.flipbooks_file_size_limit' => 'Flipbooks file size limit',
+    'admin_plans.plan.flipbook_custom_branding' => 'Custom branding on Flipbooks',
+    'admin_plans.plan.flipbook_custom_branding_help' => 'Add a custom logo overlay on your Flipbooks.',
 ];

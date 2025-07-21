@@ -1,18 +1,4 @@
 <?php
-/*
- * Copyright (c) 2025 AltumCode (https://altumcode.com/)
- *
- * This software is licensed exclusively by AltumCode and is sold only via https://altumcode.com/.
- * Unauthorized distribution, modification, or use of this software without a valid license is not permitted and may be subject to applicable legal actions.
- *
- * 🌍 View all other existing AltumCode projects via https://altumcode.com/
- * 📧 Get in touch for support or general queries via https://altumcode.com/contact
- * 📤 Download the latest version via https://altumcode.com/downloads
- *
- * 🐦 X/Twitter: https://x.com/AltumCode
- * 📘 Facebook: https://facebook.com/altumcode
- * 📸 Instagram: https://instagram.com/altumcode
- */
 
 namespace Altum\Controllers;
 
@@ -1887,6 +1873,10 @@ class AdminSettings extends Controller {
             $_POST['vcards_is_enabled'] = (int) isset($_POST['vcards_is_enabled']);
             $_POST['events_is_enabled'] = (int) isset($_POST['events_is_enabled']);
             $_POST['static_is_enabled'] = (int) isset($_POST['static_is_enabled']);
+            /* START of new code block */
+            $_POST['flipbooks_is_enabled'] = (int) isset($_POST['flipbooks_is_enabled']);
+            $_POST['flipbooks_file_size_limit'] = $_POST['flipbooks_file_size_limit'] > get_max_upload() || $_POST['flipbooks_file_size_limit'] < 0 ? get_max_upload() : (float) $_POST['flipbooks_file_size_limit'];
+            /* END of new code block */
             $_POST['claim_url_is_enabled'] = (int) isset($_POST['claim_url_is_enabled']);
             $_POST['claim_url_type'] = in_array($_POST['claim_url_type'], ['link', 'biolink', 'file', 'vcard', 'event', 'static']) ? $_POST['claim_url_type'] : 'link';
             $_POST['pixels_is_enabled'] = (int) isset($_POST['pixels_is_enabled']);
@@ -1953,6 +1943,9 @@ class AdminSettings extends Controller {
                 'vcards_is_enabled' => $_POST['vcards_is_enabled'],
                 'events_is_enabled' => $_POST['events_is_enabled'],
                 'static_is_enabled' => $_POST['static_is_enabled'],
+                /* START of corrected code block */
+                'flipbooks_is_enabled' => $_POST['flipbooks_is_enabled'],
+                /* END of corrected code block */
                 'claim_url_is_enabled' => $_POST['claim_url_is_enabled'],
                 'claim_url_type' => $_POST['claim_url_type'],
                 'biolinks_fonts' => $biolinks_fonts,
@@ -1985,6 +1978,9 @@ class AdminSettings extends Controller {
                 'file_size_limit' => $_POST['file_size_limit'],
                 'product_file_size_limit' => $_POST['product_file_size_limit'],
                 'static_size_limit' => $_POST['static_size_limit'],
+                /* START of new code block */
+                'flipbooks_file_size_limit' => $_POST['flipbooks_file_size_limit'],
+                /* END of new code block */
                 'pwa_icon_size_limit' => $_POST['pwa_icon_size_limit'],
                 'email_reports_is_enabled' => $_POST['email_reports_is_enabled'],
             ]);
