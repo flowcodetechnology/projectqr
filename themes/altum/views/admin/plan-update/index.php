@@ -340,6 +340,14 @@
                     <small class="form-text text-muted"><?= l('admin_plans.plan.static_limit_help') ?></small>
                 </div>
 
+                                <!-- START of new code block -->
+                <div class="form-group">
+                    <label for="flipbooks_limit"><?= l('admin_plans.plan.flipbooks_limit') ?></label>
+                    <input type="number" id="flipbooks_limit" name="flipbooks_limit" min="-1" class="form-control" value="<?= $data->plan->settings->flipbooks_limit ?>" />
+                    <small class="form-text text-muted"><?= l('admin_plans.plan.flipbooks_limit_help') ?></small>
+                </div>
+                <!-- END of new code block -->
+
                 <div class="form-group">
                     <label for="domains_limit"><?= l('admin_plans.plan.domains_limit') ?></label>
                     <input type="number" id="domains_limit" name="domains_limit" min="-1" class="form-control" value="<?= $data->plan->settings->domains_limit ?>" />
@@ -668,6 +676,23 @@
                         <div><small class="form-text text-muted"><?= l('admin_plans.plan.custom_pwa_is_enabled_help') ?></small></div>
                     </div>
                 </div>
+                                <!-- START of new code block -->
+                <div class="form-group">
+                    <label for="flipbooks_file_size_limit"><?= l('admin_plans.plan.flipbooks_file_size_limit') ?></label>
+                    <div class="input-group">
+                        <input type="number" id="flipbooks_file_size_limit" name="flipbooks_file_size_limit" min="0" max="<?= get_max_upload() ?>" step="any" class="form-control" value="<?= $data->plan->settings->flipbooks_file_size_limit ?>" />
+                        <div class="input-group-append">
+                            <span class="input-group-text"><?= l('global.mb') ?></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group custom-control custom-switch">
+                    <input id="flipbook_custom_branding" name="flipbook_custom_branding" type="checkbox" class="custom-control-input" <?= $data->plan->settings->flipbook_custom_branding ? 'checked="checked"' : null ?>>
+                    <label class="custom-control-label" for="flipbook_custom_branding"><?= l('admin_plans.plan.flipbook_custom_branding') ?></label>
+                    <div><small class="form-text text-muted"><?= l('admin_plans.plan.flipbook_custom_branding_help') ?></small></div>
+                </div>
+                <!-- END of new code block -->
 
                 <div class="form-group custom-control custom-switch">
                     <input id="custom_css_is_enabled" name="custom_css_is_enabled" type="checkbox" class="custom-control-input" <?= $data->plan->settings->custom_css_is_enabled ? 'checked="checked"' : null ?>>

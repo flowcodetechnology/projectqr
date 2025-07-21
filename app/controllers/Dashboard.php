@@ -127,6 +127,13 @@ class Dashboard extends Controller {
                 return db()->where('user_id', $this->user->user_id)->where('type', 'biolink')->getValue('links', 'count(*)');
             });
         }
+                /* START of new code block */
+        if(settings()->links->flipbooks_is_enabled) {
+            $flipbook_links_total = \Altum\Cache::cache_function_result('flipbook_links_total?user_id=' . $this->user->user_id, null, function() {
+                return db()->where('user_id', $this->user->user_id)->where('type', 'flipbook')->getValue('links', 'count(*)');
+            });
+        }
+        /* END of new code block */
 
         if(settings()->links->events_is_enabled) {
             $event_links_total = \Altum\Cache::cache_function_result('event_links_total?user_id=' . $this->user->user_id, null, function() {
@@ -174,6 +181,9 @@ class Dashboard extends Controller {
             /* Widgets stats */
             'event_links_total'         => $event_links_total ?? null,
             'static_links_total'        => $static_links_total ?? null,
+             /* START of new code block */
+            'flipbook_links_total'      => $flipbook_links_total ?? null,
+            /* END of new code block */
             'vcard_links_total'         => $vcard_links_total ?? null,
             'link_links_total'          => $link_links_total ?? null,
             'file_links_total'          => $file_links_total ?? null,

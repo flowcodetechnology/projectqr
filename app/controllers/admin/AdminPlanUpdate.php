@@ -1,18 +1,5 @@
 <?php
-/*
- * Copyright (c) 2025 AltumCode (https://altumcode.com/)
- *
- * This software is licensed exclusively by AltumCode and is sold only via https://altumcode.com/.
- * Unauthorized distribution, modification, or use of this software without a valid license is not permitted and may be subject to applicable legal actions.
- *
- * 🌍 View all other existing AltumCode projects via https://altumcode.com/
- * 📧 Get in touch for support or general queries via https://altumcode.com/contact
- * 📤 Download the latest version via https://altumcode.com/downloads
- *
- * 🐦 X/Twitter: https://x.com/AltumCode
- * 📘 Facebook: https://facebook.com/altumcode
- * 📸 Instagram: https://instagram.com/altumcode
- */
+
 
 namespace Altum\Controllers;
 
@@ -139,6 +126,11 @@ class AdminPlanUpdate extends Controller {
                 'vcards_limit' => (int) $_POST['vcards_limit'],
                 'events_limit' => (int) $_POST['events_limit'],
                 'static_limit' => (int) $_POST['static_limit'],
+                /* START of new code block */
+                'flipbooks_limit' => (int) $_POST['flipbooks_limit'],
+                'flipbooks_file_size_limit' => (float) $_POST['flipbooks_file_size_limit'],
+                'flipbook_custom_branding' => isset($_POST['flipbook_custom_branding']),
+                /* END of new code block */
                 'domains_limit' => (int) $_POST['domains_limit'],
                 'payment_processors_limit' => (int) $_POST['payment_processors_limit'],
                 'signatures_limit' => (int) $_POST['signatures_limit'],

@@ -120,6 +120,31 @@
                 </div>
             <?php endif ?>
 
+                        <!-- START of new code block -->
+            <?php if(settings()->links->flipbooks_is_enabled): ?>
+                <div class="col-12 col-sm-6 col-xl-4 p-3">
+                    <div class="card h-100 position-relative">
+                        <div class="card-body d-flex">
+                            <div>
+                                <div class="card border-0 mr-3 position-static" style="background: #f5f3ff;">
+                                    <div class="p-3 d-flex align-items-center justify-content-between">
+                                        <a href="<?= url('links?type=flipbook') ?>" class="stretched-link" style="color: #8b5cf6;">
+                                            <i class="fas fa-fw fa-book-open fa-lg"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="card-title h4 m-0"><?= nr($data->flipbook_links_total) ?></div>
+                                <span class="text-muted"><?= l('links.menu.flipbook') ?></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endif ?>
+            <!-- END of new code block -->
+
             <?php if(settings()->links->static_is_enabled): ?>
                 <div class="col-12 col-sm-6 col-xl-4 p-3">
                     <div class="card h-100 position-relative">
