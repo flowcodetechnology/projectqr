@@ -57,7 +57,7 @@
                 </div>
             <?php endif ?>
 
-            <div class="form-group">
+                        <div class="form-group">
                 <label for="pdf"><i class="fas fa-fw fa-file-pdf fa-sm text-muted mr-1"></i> <?= l('link.settings.flipbook.pdf') ?></label>
                 <?php if(!empty($data->link->settings->pdf)): ?>
                     <div class="mb-3">
@@ -66,7 +66,7 @@
                 <?php endif ?>
                 <input id="pdf" type="file" name="pdf" accept=".pdf" class="form-control-file altum-file-input" />
                 <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), '.pdf') . ' ' . sprintf(l('global.accessibility.file_size_limit'), $this->user->plan_settings->flipbooks_file_size_limit ?? settings()->links->flipbooks_file_size_limit) ?></small>
-                                <!-- START of new code block -->
+                
                 <?php if(!empty($data->link->settings->pdf)): ?>
                 <div class="custom-control custom-checkbox my-2">
                     <input id="pdf_remove" name="pdf_remove" type="checkbox" class="custom-control-input" onchange="this.checked ? document.querySelector('#pdf').classList.add('d-none') : document.querySelector('#pdf').classList.remove('d-none')">
@@ -75,7 +75,6 @@
                     </label>
                 </div>
                 <?php endif ?>
-                <!-- END of new code block -->
             </div>
 
             <h2 class="h4 my-4"><?= l('link.settings.flipbook.appearance_header') ?></h2>
@@ -237,11 +236,43 @@
 
 <?php ob_start() ?>
 <script>
+    /* color_picker_js */
+    let pickr_options = {
+        comparison: false,
+        components: {
+            preview: true,
+            opacity: false,
+            hue: true,
+            
+            interaction: {
+                hex: true,
+                rgba: false,
+                hsla: false,
+                hsva: false,
+                cmyk: false,
+                input: true,
+                clear: false,
+                save: true
+            }
+        }
+    };
+
+    let pickr_instance = Pickr.create({
+        el: '[data-color-picker]',
+        theme: 'classic',
+        default: document.querySelector('[data-color-picker]').value,
+        ...pickr_options
+    });
+
+    pickr_instance.on('save', (color, instance) => {
+        document.querySelector('[data-color-picker]').value = color.toHEXA().toString();
+        pickr_instance.hide();
+    });
+
     /* Form handling */
     $('form[name="update_flipbook"]').on('submit', event => {
         let form = $(event.currentTarget)[0];
         let data = new FormData(form);
-
         let notification_container = event.currentTarget.querySelector('.notification-container');
         notification_container.innerHTML = '';
         pause_submit_button(event.currentTarget.querySelector('[type="submit"][name="submit"]'));
@@ -263,7 +294,7 @@
                 if(data.status == 'success') {
                     update_main_url(data.details.url);
 
-                    /* If the file was updated, refresh the page */
+                    /* If the file was updated, refresh the page to get the new URL */
                     if(data.details.refresh) {
                         setTimeout(() => {
                            redirect(window.location.href);
@@ -280,6 +311,4 @@
         event.preventDefault();
     })
 </script>
-<?php $javascript = ob_get_clean() ?>
-
-<?php return (object) ['html' => $html, 'javascript' => $javascript] ?>
+<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
