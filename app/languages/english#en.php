@@ -1,18 +1,5 @@
 <?php
-/*
- * Copyright (c) 2025 AltumCode (https://altumcode.com/)
- *
- * This software is licensed exclusively by AltumCode and is sold only via https://altumcode.com/.
- * Unauthorized distribution, modification, or use of this software without a valid license is not permitted and may be subject to applicable legal actions.
- *
- * 🌍 View all other existing AltumCode projects via https://altumcode.com/
- * 📧 Get in touch for support or general queries via https://altumcode.com/contact
- * 📤 Download the latest version via https://altumcode.com/downloads
- *
- * 🐦 X/Twitter: https://x.com/AltumCode
- * 📘 Facebook: https://facebook.com/altumcode
- * 📸 Instagram: https://instagram.com/altumcode
- */
+
 
 return [
     'direction' => 'ltr',
@@ -4402,4 +4389,39 @@ return [
     'cron.email_reports.p1' => 'Short analytics overview for the <strong>%s</strong> link.',
     'cron.email_reports.button' => 'View statistics',
     'cron.email_reports.notice' => 'You\'re receiving these emails because you activated email reports. You can unsubscribe from the %slink settings%s page at any point in time.',
+        /*
+    * Flipbooks
+    */
+    'global.plan_settings.flipbooks_limit' => '<strong>%s</strong> flipbook links',
+    'global.plan_settings.flipbook_custom_branding' => 'Custom branding on Flipbooks',
+    'global.plan_settings.flipbook_custom_branding_help' => 'Add a custom logo overlay on your Flipbooks.',
+
+    'links.menu.flipbook' => 'Flipbook links',
+
+    'link.breadcrumb.flipbook' => 'Flipbook link',
+    'link.flipbook.name' => 'Flipbook link',
+
+    'link.settings.flipbook.header' => 'Flipbook settings',
+    'link.settings.flipbook.pdf' => 'PDF File',
+    'link.settings.flipbook.pdf_help' => 'Upload the PDF file that will be used for the flipbook.',
+    'link.settings.flipbook.appearance_header' => 'Appearance',
+    'link.settings.flipbook.start_page' => 'Starting page',
+    'link.settings.flipbook.start_page_help' => 'The page number to start the flipbook on.',
+    'link.settings.flipbook.direction' => 'Reading direction',
+    'link.settings.flipbook.direction_ltr' => 'Left to Right',
+    'link.settings.flipbook.direction_rtl' => 'Right to Left',
+    'link.settings.flipbook.background_color' => 'Viewer background color',
+    'link.settings.flipbook.background_color_help' => 'The color of the background behind the flipbook.',
+    'link.settings.flipbook.sound_on_turn' => 'Page turning sound',
+    'link.settings.flipbook.shadow_intensity' => 'Page shadow intensity',
+    'link.settings.flipbook.shadow_intensity_help' => 'The strength of the shadow effect on the pages.',
+    'link.settings.flipbook.controls_header' => 'Controls',
+    'link.settings.flipbook.display_download' => 'Enable download button',
+    'link.settings.flipbook.display_print' => 'Enable print button',
+    'link.settings.flipbook.display_thumbnails' => 'Enable thumbnails button',
+    'link.settings.flipbook.display_zoom' => 'Enable zoom buttons',
+    'link.settings.flipbook.display_fullscreen' => 'Enable fullscreen button',
+
+    'create_flipbook_modal.header' => 'Flipbook',
+    'create_flipbook_modal.input.submit' => 'Create Flipbook URL',
 ];

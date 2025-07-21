@@ -1,18 +1,4 @@
 <?php
-/*
- * Copyright (c) 2025 AltumCode (https://altumcode.com/)
- *
- * This software is licensed exclusively by AltumCode and is sold only via https://altumcode.com/.
- * Unauthorized distribution, modification, or use of this software without a valid license is not permitted and may be subject to applicable legal actions.
- *
- * 🌍 View all other existing AltumCode projects via https://altumcode.com/
- * 📧 Get in touch for support or general queries via https://altumcode.com/contact
- * 📤 Download the latest version via https://altumcode.com/downloads
- *
- * 🐦 X/Twitter: https://x.com/AltumCode
- * 📘 Facebook: https://facebook.com/altumcode
- * 📸 Instagram: https://instagram.com/altumcode
- */
 
 namespace Altum\Controllers;
 
@@ -827,6 +813,71 @@ class LinkAjax extends Controller {
 
         Response::json(l('global.success_message.create2'), 'success', ['url' => url('link/' . $link_id)]);
     }
+        /* START of new flipbook code block */
+    private function create_flipbook() {
+        if(!settings()->links->flipbooks_is_enabled) {
+            Response::json(l('global.error_message.basic'), 'error');
+        }
+
+        $_POST['url'] = !empty($_POST['url']) && $this->user->plan_settings->custom_url ? get_slug($_POST['url'], '-', false) : null;
+
+        if(empty($_POST['domain_id']) && !settings()->links->main_domain_is_enabled && !\Altum\Authentication::is_admin()) {
+            Response::json(l('create_link_modal.error_message.main_domain_is_disabled'), 'error');
+        }
+
+        /* Check if custom domain is set */
+        $domain_id = $this->get_domain_id($_POST['domain_id'] ?? false);
+
+        /* Make sure that the user didn't exceed the limit */
+        $user_total_flipbooks = database()->query("SELECT COUNT(*) AS `total` FROM `links` WHERE `user_id` = {$this->user->user_id} AND `type` = 'flipbook'")->fetch_object()->total;
+        if($this->user->plan_settings->flipbooks_limit != -1 && $user_total_flipbooks >= $this->user->plan_settings->flipbooks_limit) {
+            Response::json(l('global.info_message.plan_feature_limit'), 'error');
+        }
+
+        /* Check for duplicate url if needed */
+        if($_POST['url']) {
+            if(db()->where('url', $_POST['url'])->where('domain_id', $domain_id)->getValue('links', 'link_id')) {
+                Response::json(l('link.error_message.url_exists'), 'error');
+            }
+        }
+
+        /* Start the creation process */
+        $url = $_POST['url'] ?? mb_strtolower(string_generate(settings()->links->random_url_length ?? 7));
+        $type = 'flipbook';
+        $settings = json_encode([]);
+
+        /* Generate random url if not specified */
+        while(db()->where('url', $url)->where('domain_id', $domain_id)->getValue('links', 'link_id')) {
+            $url = mb_strtolower(string_generate(settings()->links->random_url_length ?? 7));
+        }
+
+        $this->check_url($_POST['url']);
+
+        /* Insert to database */
+        $link_id = db()->insert('links', [
+            'user_id' => $this->user->user_id,
+            'domain_id' => $domain_id,
+            'type' => $type,
+            'url' => $url,
+            'settings' => $settings,
+            'datetime' => \Altum\Date::$date,
+        ]);
+
+        /* Insert the flipbook link specific details */
+        db()->insert('flipbooks', [
+            'link_id' => $link_id,
+            'user_id' => $this->user->user_id,
+            'datetime' => \Altum\Date::$date,
+        ]);
+
+        /* Clear the cache */
+        cache()->deleteItem($type . '_links_total?user_id=' . $this->user->user_id);
+        cache()->deleteItem('links_total?user_id=' . $this->user->user_id);
+        cache()->deleteItem('links?user_id=' . $this->user->user_id);
+
+        Response::json(l('global.success_message.create2'), 'success', ['url' => url('link/' . $link_id)]);
+    }
+    /* END of new flipbook code block */
 
     private function update() {
         /* Team checks */
@@ -2406,6 +2457,128 @@ class LinkAjax extends Controller {
 
         Response::json(l('global.success_message.update2'), 'success', ['url' => $url]);
     }
+
+        /* START of new code block */
+    private function update_flipbook() {
+        if(!settings()->links->flipbooks_is_enabled) {
+            Response::json(l('global.error_message.basic'), 'error');
+        }
+
+        $_POST['link_id'] = (int) $_POST['link_id'];
+        $_POST['project_id'] = empty($_POST['project_id']) ? null : (int) $_POST['project_id'];
+        $_POST['url'] = !empty($_POST['url']) ? get_slug($_POST['url'], '-', false) : false;
+        $_POST['sensitive_content'] = (int) isset($_POST['sensitive_content']);
+
+        if(empty($_POST['domain_id']) && !settings()->links->main_domain_is_enabled && !\Altum\Authentication::is_admin()) {
+            Response::json(l('create_link_modal.error_message.main_domain_is_disabled'), 'error');
+        }
+
+        /* Get domains */
+        $domains = (new Domain())->get_available_domains_by_user($this->user);
+
+        /* Check if custom domain is set */
+        $domain_id = isset($domains[$_POST['domain_id']]) ? $_POST['domain_id'] : 0;
+
+        /* Exclusivity check */
+        $_POST['is_main_link'] = isset($_POST['is_main_link']) && $domain_id && $domains[$_POST['domain_id']]->type == 0;
+
+        /* Existing pixels */
+        $pixels = (new \Altum\Models\Pixel())->get_pixels($this->user->user_id);
+        $_POST['pixels_ids'] = isset($_POST['pixels_ids']) ? array_map(
+            function($pixel_id) {
+                return (int) $pixel_id;
+            },
+            array_filter($_POST['pixels_ids'], function($pixel_id) use($pixels) {
+                return array_key_exists($pixel_id, $pixels);
+            })
+        ) : [];
+        $_POST['pixels_ids'] = json_encode($_POST['pixels_ids']);
+
+        $this->check_url($_POST['url']);
+
+        if(!$link = db()->where('link_id', $_POST['link_id'])->where('user_id', $this->user->user_id)->getOne('links')) {
+            die();
+        }
+
+        /* Existing projects */
+        $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
+        $_POST['project_id'] = !empty($_POST['project_id']) && array_key_exists($_POST['project_id'], $projects) ? (int) $_POST['project_id'] : null;
+
+        $flipbook = db()->where('link_id', $link->link_id)->getOne('flipbooks');
+        $link->settings = json_decode($link->settings);
+
+        /* Check for a password set */
+        $_POST['password'] = !empty($_POST['qweasdzxc']) ?
+            ($_POST['qweasdzxc'] != $link->settings->password ? password_hash($_POST['qweasdzxc'], PASSWORD_DEFAULT) : $link->settings->password)
+            : null;
+
+        /* Check for duplicate url if needed */
+        if($_POST['url'] && ($_POST['url'] != $link->url || $domain_id != $link->domain_id)) {
+            if(db()->where('url', $_POST['url'])->where('domain_id', $domain_id)->getValue('links', 'link_id')) {
+                Response::json(l('link.error_message.url_exists'), 'error');
+            }
+        }
+
+        $url = $_POST['url'];
+
+        if(empty($_POST['url'])) {
+            /* Generate random url if not specified */
+            $url = mb_strtolower(string_generate(settings()->links->random_url_length ?? 7));
+
+            while(db()->where('url', $url)->where('domain_id', $domain_id)->getValue('links', 'link_id')) {
+                $url = mb_strtolower(string_generate(settings()->links->random_url_length ?? 7));
+            }
+        }
+
+        /* File upload */
+        $db_file = \Altum\Uploads::process_upload($flipbook->pdf, 'flipbooks', 'pdf', 'pdf_remove', $this->user->plan_settings->flipbooks_file_size_limit ?? settings()->links->flipbooks_file_size_limit, 'json_error');
+        $refresh = $db_file != $flipbook->pdf;
+
+        $settings = [
+            'password' => $_POST['password'],
+            'sensitive_content' => $_POST['sensitive_content'],
+        ];
+
+        /* Process flipbook settings */
+        $flipbook_settings = [
+            'pdf' => $db_file,
+            'start_page' => (int) $_POST['start_page'] > 0 ? (int) $_POST['start_page'] : 1,
+            'direction' => in_array($_POST['direction'], ['ltr', 'rtl']) ? $_POST['direction'] : 'ltr',
+            'background_color' => !verify_hex_color($_POST['background_color']) ? '#ffffff' : $_POST['background_color'],
+            'shadow_intensity' => (int) $_POST['shadow_intensity'] >= 0 && (int) $_POST['shadow_intensity'] <= 100 ? (int) $_POST['shadow_intensity'] : 50,
+            'display_download' => (int) isset($_POST['display_download']),
+            'display_print' => (int) isset($_POST['display_print']),
+            'display_thumbnails' => (int) isset($_POST['display_thumbnails']),
+            'display_zoom' => (int) isset($_POST['display_zoom']),
+            'display_fullscreen' => (int) isset($_POST['display_fullscreen']),
+            'sound_on_turn' => (int) isset($_POST['sound_on_turn']),
+        ];
+
+        $settings = json_encode($settings);
+
+        db()->where('link_id', $_POST['link_id'])->update('links', [
+            'project_id' => $_POST['project_id'],
+            'domain_id' => $domain_id,
+            'pixels_ids' => $_POST['pixels_ids'],
+            'url' => $url,
+            'settings' => $settings,
+            'last_datetime' => \Altum\Date::$date,
+        ]);
+
+        db()->where('link_id', $_POST['link_id'])->update('flipbooks', $flipbook_settings);
+
+        $this->process_is_main_link_domain($link, $domains);
+
+        $url = $domain_id && $_POST['is_main_link'] ? '' : $url;
+
+        /* Clear the cache */
+        cache()->deleteItem('link?link_id=' . $link->link_id);
+        cache()->deleteItemsByTag('link_id=' . $link->link_id);
+        cache()->deleteItem('links?user_id=' . $this->user->user_id);
+
+        Response::json(l('global.success_message.update2'), 'success', ['url' => $url, 'refresh' => $refresh]);
+    }
+    /* END of new code block */
 
     private function delete() {
         /* Team checks */

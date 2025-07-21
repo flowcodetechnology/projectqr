@@ -1,18 +1,4 @@
 <?php
-/*
- * Copyright (c) 2025 AltumCode (https://altumcode.com/)
- *
- * This software is licensed exclusively by AltumCode and is sold only via https://altumcode.com/.
- * Unauthorized distribution, modification, or use of this software without a valid license is not permitted and may be subject to applicable legal actions.
- *
- * 🌍 View all other existing AltumCode projects via https://altumcode.com/
- * 📧 Get in touch for support or general queries via https://altumcode.com/contact
- * 📤 Download the latest version via https://altumcode.com/downloads
- *
- * 🐦 X/Twitter: https://x.com/AltumCode
- * 📘 Facebook: https://facebook.com/altumcode
- * 📸 Instagram: https://instagram.com/altumcode
- */
 
 namespace Altum\Controllers;
 
@@ -342,7 +328,22 @@ class Link extends Controller {
                 /* Process file display / download */
                 $this->process_file();
 
-            } else if($this->link->type == 'static') {
+                        /* START of new code block */
+            } else if($this->link->type == 'flipbook') {
+
+                if(count($this->link->pixels_ids) && !isset($_GET['process'])) {
+                    $this->redirect_to($this->link->full_url . '&process=true');
+                }
+
+                /* Store statistics */
+                $this->create_statistics();
+
+                /* Process flipbook */
+                $this->process_flipbook();
+
+            }
+            /* END of new code block */ 
+            else if($this->link->type == 'static') {
 
                 /* Process */
                 $this->process_static();
@@ -525,6 +526,44 @@ class Link extends Controller {
         $biolink_wrapper = new \Altum\View('l/biolink_wrapper', (array) $this);
         echo $biolink_wrapper->run();
     }
+    /* START of new code block */
+    private function process_flipbook() {
+
+        /* Get all the specific details from the database */
+        $flipbook = db()->where('link_id', $this->link->link_id)->getOne('flipbooks');
+
+        /* Make sure the flipbook exists */
+        if(!$flipbook || ($flipbook && !$flipbook->pdf)) {
+            redirect('not-found');
+        }
+
+        /* Merge the settings */
+        foreach($flipbook as $key => $value) {
+            $this->link->settings->{$key} = $value;
+        }
+
+        /* Set a custom title */
+        Title::set($this->link->url);
+
+        if(count($this->link->pixels_ids)) {
+            /* Get the needed pixels */
+            $pixels = (new \Altum\Models\Pixel())->get_pixels_by_pixels_ids_and_user_id($this->link->pixels_ids, $this->link->user_id);
+
+            /* Prepare the pixels view */
+            $pixels_view = new \Altum\View('l/partials/pixels');
+            $this->add_view_content('pixels', $pixels_view->run(['pixels' => $pixels, 'type' => 'flipbook']));
+        }
+
+        /* Prepare the view */
+        $data = ['link' => $this->link, 'user' => $this->user];
+        $view_content = new \Altum\View('l/partials/flipbook', (array) $this);
+        $this->add_view_content('content', $view_content->run($data));
+
+        /* Prepare the view */
+        $biolink_wrapper = new \Altum\View('l/biolink_wrapper', (array) $this);
+        echo $biolink_wrapper->run($data);
+    }
+    /* END of new code block */
 
     private function process_vcard() {
         foreach(['vcard_first_name', 'vcard_last_name', 'vcard_email', 'vcard_url', 'vcard_company', 'vcard_job_title', 'vcard_birthday', 'vcard_street', 'vcard_city', 'vcard_zip', 'vcard_region', 'vcard_country', 'vcard_note'] as $key) {
