@@ -66,6 +66,16 @@
                 <?php endif ?>
                 <input id="pdf" type="file" name="pdf" accept=".pdf" class="form-control-file altum-file-input" />
                 <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), '.pdf') . ' ' . sprintf(l('global.accessibility.file_size_limit'), $this->user->plan_settings->flipbooks_file_size_limit ?? settings()->links->flipbooks_file_size_limit) ?></small>
+                                <!-- START of new code block -->
+                <?php if(!empty($data->link->settings->pdf)): ?>
+                <div class="custom-control custom-checkbox my-2">
+                    <input id="pdf_remove" name="pdf_remove" type="checkbox" class="custom-control-input" onchange="this.checked ? document.querySelector('#pdf').classList.add('d-none') : document.querySelector('#pdf').classList.remove('d-none')">
+                    <label class="custom-control-label" for="pdf_remove">
+                        <span class="text-muted"><?= l('global.delete_file') ?></span>
+                    </label>
+                </div>
+                <?php endif ?>
+                <!-- END of new code block -->
             </div>
 
             <h2 class="h4 my-4"><?= l('link.settings.flipbook.appearance_header') ?></h2>
