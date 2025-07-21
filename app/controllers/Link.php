@@ -125,6 +125,11 @@ class Link extends Controller {
                     'links_types'       => $links_types,
                     'notification_handlers' => $notification_handlers ?? null,
                 ];
+                /* START of new code block */
+                /* Load the specific link settings view */
+                $view = new \Altum\View('link/settings/' . $this->link->type, (array) $this);
+                $this->add_view_content('method', $view->run($data));
+                /* END of new code block */
 
                 break;
 
@@ -630,9 +635,9 @@ class Link extends Controller {
         $view = new \Altum\View('biolink-block/biolink_block_delete_modal', (array) $this);
         \Altum\Event::add_content($view->run(), 'modals');
 
-        /* Prepare the method View */
-        $view = new \Altum\View('link/' . $method, (array) $this);
-        $this->add_view_content('method', $view->run($data));
+        // /* Prepare the method View */
+        // $view = new \Altum\View('link/' . $method, (array) $this);
+        // $this->add_view_content('method', $view->run($data));
 
         /* Prepare the view */
         $data = [
