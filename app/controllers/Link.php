@@ -111,7 +111,7 @@ class Link extends Controller {
                 }
 
                 /* Prepare variables for the view */
-                $data = [.
+                $data = [
                     'link'              => $this->link,
                     'method'            => $method,
                     'link_links_result' => $link_links_result ?? null,
