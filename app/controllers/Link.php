@@ -33,6 +33,11 @@ class Link extends Controller {
         $this->link->email_reports = json_decode($this->link->email_reports ?? '[]');
 
         if($this->link->type == 'flipbook') {
+            // Ensure settings is an object before assigning properties
+            if(!is_object($this->link->settings)) {
+                $this->link->settings = (object) $this->link->settings;
+            }
+            
             $flipbook = db()->where('link_id', $this->link->link_id)->getOne('flipbooks');
             if($flipbook) {
                 foreach($flipbook as $key => $value) {
