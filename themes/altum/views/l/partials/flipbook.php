@@ -17,11 +17,16 @@ if(
 }
 ?>
 
+<!-- Load required JS libraries FIRST and OUTSIDE the ob_start block -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+
+<?php ob_start() ?>
+<!-- Flipbook Viewer Container and Branding -->
 <div class="container animate__animated animate__fadeIn">
     <div class="row">
         <div class="col-12 d-flex flex-column justify-content-center align-items-center">
 
-            <!-- DF_Book_Container is the default container for dFlip -->
             <div id="DF_Book_Container"></div>
 
             <?php if($branding): ?>
@@ -39,26 +44,19 @@ if(
     </div>
 </div>
 
-<?php ob_start() ?>
-<!-- jQuery is required for dFlip -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
-
-
-<!-- dFlip Styles -->
+<!-- dFlip CSS styles -->
 <link href="<?= ASSETS_FULL_URL . 'css/dflip.min.css' ?>" rel="stylesheet" media="screen">
 <link href="<?= ASSETS_FULL_URL . 'css/themify-icons.min.css' ?>" rel="stylesheet" media="screen">
 <?php \Altum\Event::add_content(ob_get_clean(), 'head') ?>
 
 <?php ob_start() ?>
+<!-- dFlip JS Library -->
 <script src="<?= ASSETS_FULL_URL . 'js/dflip.min.js' ?>"></script>
 <?php echo '<!-- PDF Path: ' . \Altum\Uploads::get_full_url('flipbooks') . $data->link->settings->pdf . ' -->'; ?>
-
 
 <script>
     'use strict';
 
-    /* Default options that you can override */
     let default_options = {
         height: '90vh',
         direction: '<?= $data->link->settings->direction ?>',
@@ -80,7 +78,6 @@ if(
         hideControls: 'annotation,search',
     };
 
-    /* Controls to hide based on user settings */
     let hide_controls = ['annotation', 'search'];
     <?php if(!$data->link->settings->display_download) { echo "hide_controls.push('download');"; } ?>
     <?php if(!$data->link->settings->display_print) { echo "hide_controls.push('print');"; } ?>
@@ -90,19 +87,16 @@ if(
 
     default_options.hideControls = hide_controls.join(',');
 
-    /* Custom branding logo overlay */
     <?php if($this->user->plan_settings->flipbook_custom_branding && !empty($this->user->preferences->white_label_logo)): ?>
     default_options.logo = '<?= \Altum\Uploads::get_full_url('white_label_logo') . $this->user->preferences->white_label_logo ?>';
     default_options.logoHeight = 40;
     <?php endif; ?>
 
-    /* Initialize dFlip */
-        $(document).ready(function () {
+    $(document).ready(function () {
         $("#DF_Book_Container").flipBook({
             ...default_options,
             source: '<?= \Altum\Uploads::get_full_url('flipbooks') . $data->link->settings->pdf ?>',
         });
     });
-
 </script>
 <?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
