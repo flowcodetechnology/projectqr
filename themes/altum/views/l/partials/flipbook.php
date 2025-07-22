@@ -2,16 +2,18 @@
 
 <?php
 /* Get the branding */
+$settings = is_object($this->link->settings) ? $this->link->settings : json_decode(json_encode($this->link->settings));
 $branding = null;
+
 if(
     !$this->user->plan_settings->removable_branding
     || (
         $this->user->plan_settings->removable_branding
-        && $this->link->settings->display_branding
+        && ($settings->display_branding ?? false)
         && $this->user->plan_settings->custom_branding
     )
 ) {
-    $branding = $this->link->settings->branding;
+    $branding = $settings->branding ?? null;
 }
 ?>
 
