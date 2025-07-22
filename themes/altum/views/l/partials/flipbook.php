@@ -50,6 +50,8 @@ if(
 
 <?php ob_start() ?>
 <script src="<?= ASSETS_FULL_URL . 'js/dflip.min.js' ?>"></script>
+<?php echo '<!-- PDF Path: ' . \Altum\Uploads::get_full_url('flipbooks') . $data->link->settings->pdf . ' -->'; ?>
+
 
 <script>
     'use strict';
