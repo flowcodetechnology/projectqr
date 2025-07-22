@@ -1,22 +1,13 @@
 <?php defined('ALTUMCODE') || die() ?>
 
 <?php
+
 /* Get some variables */
 $biolink_backgrounds = require APP_PATH . 'includes/biolink_backgrounds.php';
 
 /* Get the proper settings depending on the type of link */
-$settings = null;
-$view_path = THEME_PATH . 'views/link/settings/' . mb_strtolower($data->link->type) . '.php';
+$settings = require THEME_PATH . 'views/link/settings/' . mb_strtolower($data->link->type) . '.php';
 
-if(file_exists($view_path)) {
-    $settings = require $view_path;
-}
-
-/* Make sure the settings have been loaded */
-if(!$settings || !is_object($settings) || !property_exists($settings, 'html') || !property_exists($settings, 'javascript')) {
-    /* In case the file is not found, load the default link settings */
-    $settings = require THEME_PATH . 'views/link/settings/link.php';
-}
 ?>
 
 <?= $settings->html ?>

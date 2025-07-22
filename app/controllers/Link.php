@@ -28,18 +28,18 @@ class Link extends Controller {
         $biolink_blocks = require APP_PATH . 'includes/biolink_blocks.php';
         $links_types = require APP_PATH . 'includes/links_types.php';
 
-        $this->link->settings = json_decode($this->link->settings ?? '{}');
+        $this->link->settings = json_decode($this->link->settings ?? '');
         $this->link->pixels_ids = json_decode($this->link->pixels_ids ?? '[]');
         $this->link->email_reports = json_decode($this->link->email_reports ?? '[]');
 
-        // if($this->link->type == 'flipbook') {
-        //     $flipbook = db()->where('link_id', $this->link->link_id)->getOne('flipbooks');
-        //     if($flipbook && is_object($this->link->settings)) {
-        //         foreach($flipbook as $key => $value) {
-        //             $this->link->settings->{$key} = $value;
-        //         }
-        //     }
-        // }
+        if($this->link->type == 'flipbook') {
+            $flipbook = db()->where('link_id', $this->link->link_id)->getOne('flipbooks');
+            if($flipbook) {
+                foreach($flipbook as $key => $value) {
+                    $this->link->settings->{$key} = $value;
+                }
+            }
+        }
         /* END of new code block */
 
         /* Get the current domain if needed */
@@ -125,15 +125,6 @@ class Link extends Controller {
                     'links_types'       => $links_types,
                     'notification_handlers' => $notification_handlers ?? null,
                 ];
-
-                /* Load the specific link settings view */
-                $view = new \Altum\View('link/settings/' . $this->link->type, (array) $this);
-                $data['method_view'] = $view->run($data);
-                // /* START of new code block */
-                // /* Load the specific link settings view */
-                // $view = new \Altum\View('link/settings/' . $this->link->type, (array) $this);
-                // $this->add_view_content('method', $view->run($data));
-                // /* END of new code block */
 
                 break;
 
@@ -638,28 +629,20 @@ class Link extends Controller {
         /* Delete Modal */
         $view = new \Altum\View('biolink-block/biolink_block_delete_modal', (array) $this);
         \Altum\Event::add_content($view->run(), 'modals');
-        
-                /* Prepare the method View */
-        $data['method'] = $method;
+
+        /* Prepare the method View */
         $view = new \Altum\View('link/' . $method, (array) $this);
         $this->add_view_content('method', $view->run($data));
 
-        /* Prepare the main view */
+        /* Prepare the view */
+        $data = [
+            'link' => $this->link,
+            'method' => $method,
+            'links_types' => $links_types,
+        ];
+
         $view = new \Altum\View('link/index', (array) $this);
         $this->add_view_content('content', $view->run($data));
-        // // /* Prepare the method View */
-        // $view = new \Altum\View(view: 'link/' . $method, (array) $this);
-        // $this->add_view_content('method', $view->run($data));
-
-        // /* Prepare the view */
-        // $data = [
-        //     'link' => $this->link,
-        //     'method' => $method,
-        //     'links_types' => $links_types,
-        // ];
-
-        // $view = new \Altum\View('link/index', (array) $this);
-        // $this->add_view_content('content', $view->run($data));
 
     }
 
