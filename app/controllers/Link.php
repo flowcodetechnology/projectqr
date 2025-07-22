@@ -638,20 +638,28 @@ class Link extends Controller {
         /* Delete Modal */
         $view = new \Altum\View('biolink-block/biolink_block_delete_modal', (array) $this);
         \Altum\Event::add_content($view->run(), 'modals');
+        
+                /* Prepare the method View */
+        $data['method'] = $method;
+        $view = new \Altum\View('link/' . $method, (array) $this);
+        $this->add_view_content('method', $view->run($data));
 
-        // /* Prepare the method View */
-        // $view = new \Altum\View('link/' . $method, (array) $this);
-        // $this->add_view_content('method', $view->run($data));
-
-        /* Prepare the view */
-        $data = [
-            'link' => $this->link,
-            'method' => $method,
-            'links_types' => $links_types,
-        ];
-
+        /* Prepare the main view */
         $view = new \Altum\View('link/index', (array) $this);
         $this->add_view_content('content', $view->run($data));
+        // // /* Prepare the method View */
+        // $view = new \Altum\View(view: 'link/' . $method, (array) $this);
+        // $this->add_view_content('method', $view->run($data));
+
+        // /* Prepare the view */
+        // $data = [
+        //     'link' => $this->link,
+        //     'method' => $method,
+        //     'links_types' => $links_types,
+        // ];
+
+        // $view = new \Altum\View('link/index', (array) $this);
+        // $this->add_view_content('content', $view->run($data));
 
     }
 
