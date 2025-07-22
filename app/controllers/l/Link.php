@@ -548,6 +548,9 @@ class Link extends Controller {
 
         /* Get all the specific details from the database */
         $flipbook = db()->where('link_id', $this->link->link_id)->getOne('flipbooks');
+        echo '<pre>';
+        var_dump($flipbook);
+        exit;
 
         /* Make sure the flipbook exists */
         if(!$flipbook || ($flipbook && empty($flipbook->pdf))) {
