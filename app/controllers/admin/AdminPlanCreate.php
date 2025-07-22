@@ -92,10 +92,11 @@ class AdminPlanCreate extends Controller {
                 'events_limit' => (int) $_POST['events_limit'],
                 'static_limit' => (int) $_POST['static_limit'],
                 /* START of new code block */
-                'flipbooks_limit' => (int) $_POST['flipbooks_limit'],
-                'flipbooks_file_size_limit' => (float) $_POST['flipbooks_file_size_limit'],
-                'flipbook_custom_branding' => isset($_POST['flipbook_custom_branding']),
+                'flipbooks_limit' => isset($_POST['flipbooks_limit']) ? (int) $_POST['flipbooks_limit'] : 0,
+                'flipbooks_file_size_limit' => isset($_POST['flipbooks_file_size_limit']) ? (float) $_POST['flipbooks_file_size_limit'] : 0,
+                'flipbook_custom_branding' => isset($_POST['flipbook_custom_branding']) ? (bool) $_POST['flipbook_custom_branding'] : false,
                 /* END of new code block */
+
                 'domains_limit' => (int) $_POST['domains_limit'],
                 'payment_processors_limit' => (int) $_POST['payment_processors_limit'],
                 'signatures_limit' => (int) $_POST['signatures_limit'],
