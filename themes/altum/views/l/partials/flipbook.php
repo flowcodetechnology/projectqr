@@ -42,6 +42,8 @@ if(
 <?php ob_start() ?>
 <!-- jQuery is required for dFlip -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+
 
 <!-- dFlip Styles -->
 <link href="<?= ASSETS_FULL_URL . 'css/dflip.min.css' ?>" rel="stylesheet" media="screen">
