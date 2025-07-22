@@ -84,7 +84,7 @@ class Link extends Controller {
 
         /* Parse the settings */
         $this->link->additional = json_decode($this->link->additional ?? '');
-        $this->link->settings = json_decode($this->link->settings ?? '');
+        $this->link->settings = json_decode($this->link->settings ?? '{}');
         $this->link->pixels_ids = json_decode($this->link->pixels_ids ?? '[]');
 
         /* Determine the actual full url */
@@ -533,7 +533,7 @@ class Link extends Controller {
         $flipbook = db()->where('link_id', $this->link->link_id)->getOne('flipbooks');
 
         /* Make sure the flipbook exists */
-        if(!$flipbook || ($flipbook && !$flipbook->pdf)) {
+        if(!$flipbook || ($flipbook && empty($flipbook->pdf))) {
             redirect('not-found');
         }
 
