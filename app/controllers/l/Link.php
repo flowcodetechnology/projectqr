@@ -87,6 +87,18 @@ class Link extends Controller {
         $this->link->settings = json_decode($this->link->settings ?? '{}');
         $this->link->pixels_ids = json_decode($this->link->pixels_ids ?? '[]');
 
+        /* START of new code block */
+        /* If flipbook, get all the specific details */
+        if($this->link->type == 'flipbook') {
+            $flipbook = db()->where('link_id', $this->link->link_id)->getOne('flipbooks');
+            if($flipbook) {
+                foreach($flipbook as $key => $value) {
+                    $this->link->settings->{$key} = $value;
+                }
+            }
+        }
+        /* END of new code block */
+
         /* Determine the actual full url */
         if(in_array($this->type, ['link', 'file', 'vcard', 'event'])) {
             $this->link->full_url = $domain_id && !isset($_GET['link_id']) ? \Altum\Router::$data['domain']->scheme . \Altum\Router::$data['domain']->host . '/' . (\Altum\Router::$data['domain']->link_id == $this->link->link_id ? null : $this->link->url) : SITE_URL . $this->link->url;
