@@ -636,8 +636,8 @@ class Link extends Controller {
         \Altum\Event::add_content($view->run(), 'modals');
 
         // /* Prepare the method View */
-        // $view = new \Altum\View('link/' . $method, (array) $this);
-        // $this->add_view_content('method', $view->run($data));
+        $view = new \Altum\View('link/' . $method, (array) $this);
+        $this->add_view_content('method', $view->run($data));
 
         /* Prepare the view */
         $data = [
