@@ -1,21 +1,5 @@
 <?php defined('ALTUMCODE') || die() ?>
-<?php
-// Add this debug code at the top of your flipbook.php file after the first <?php line
-// to see what's in the $data->link->settings object
 
-echo '<pre style="background: #f4f4f4; padding: 10px; margin: 10px 0; border-radius: 5px;">';
-echo '<strong>DEBUG: Link Settings Object:</strong><br>';
-var_dump($data->link->settings);
-echo '</pre>';
-
-// Also check if password and sensitive_content exist
-echo '<pre style="background: #fff3cd; padding: 10px; margin: 10px 0; border-radius: 5px;">';
-echo '<strong>DEBUG: Password property exists:</strong> ' . (property_exists($data->link->settings, 'password') ? 'YES' : 'NO') . '<br>';
-echo '<strong>DEBUG: Password value:</strong> ' . ($data->link->settings->password ?? 'NOT SET') . '<br>';
-echo '<strong>DEBUG: Sensitive_content property exists:</strong> ' . (property_exists($data->link->settings, 'sensitive_content') ? 'YES' : 'NO') . '<br>';
-echo '<strong>DEBUG: Sensitive_content value:</strong> ' . ($data->link->settings->sensitive_content ?? 'NOT SET') . '<br>';
-echo '</pre>';
-?>
 
 <?php ob_start() ?>
 
