@@ -38,6 +38,10 @@ if(
 </div>
 
 <?php ob_start() ?>
+<!-- jQuery is required for dFlip -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- dFlip Styles -->
 <link href="<?= ASSETS_FULL_URL . 'css/dflip.min.css' ?>" rel="stylesheet" media="screen">
 <link href="<?= ASSETS_FULL_URL . 'css/themify-icons.min.css' ?>" rel="stylesheet" media="screen">
 <?php \Altum\Event::add_content(ob_get_clean(), 'head') ?>
@@ -87,9 +91,12 @@ if(
     <?php endif; ?>
 
     /* Initialize dFlip */
-    let flipbook = $("#DF_Book_Container").flipBook({
-        ...default_options,
-        source: '<?= \Altum\Uploads::get_full_url('flipbooks') . $data->link->settings->pdf ?>',
+        $(document).ready(function () {
+        $("#DF_Book_Container").flipBook({
+            ...default_options,
+            source: '<?= \Altum\Uploads::get_full_url('flipbooks') . $data->link->settings->pdf ?>',
+        });
     });
+
 </script>
 <?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
