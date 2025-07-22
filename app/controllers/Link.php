@@ -125,11 +125,11 @@ class Link extends Controller {
                     'links_types'       => $links_types,
                     'notification_handlers' => $notification_handlers ?? null,
                 ];
-                /* START of new code block */
-                /* Load the specific link settings view */
-                $view = new \Altum\View('link/settings/' . $this->link->type, (array) $this);
-                $this->add_view_content('method', $view->run($data));
-                /* END of new code block */
+                // /* START of new code block */
+                // /* Load the specific link settings view */
+                // $view = new \Altum\View('link/settings/' . $this->link->type, (array) $this);
+                // $this->add_view_content('method', $view->run($data));
+                // /* END of new code block */
 
                 break;
 
