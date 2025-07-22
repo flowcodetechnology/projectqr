@@ -2378,6 +2378,9 @@ class LinkAjax extends Controller {
                 $url = mb_strtolower(string_generate(settings()->links->random_url_length ?? 7));
             }
         }
+        /* Ensure settings keys exist even if values are not set */
+        $_POST['password'] = $_POST['password'] ?? '';
+        $_POST['sensitive_content'] = isset($_POST['sensitive_content']) ? (bool) $_POST['sensitive_content'] : false;
 
         $settings = [
             'schedule' => $_POST['schedule'],
