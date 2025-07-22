@@ -1926,13 +1926,15 @@ class AdminSettings extends Controller {
             /* biolinks fonts */
             $biolinks_fonts = [];
 
-            foreach($_POST['id'] as $id) {
-                $biolinks_fonts[$id] = [
-                    'id' => get_slug($id),
-                    'name' => $_POST['name'][$id],
-                    'font_family' => $_POST['font_family'][$id],
-                    'css_url' => $_POST['css_url'][$id],
-                ];
+            if(isset($_POST['id']) && is_array($_POST['id'])) {
+                foreach($_POST['id'] as $id) {
+                    $biolinks_fonts[$id] = [
+                        'id' => get_slug($id),
+                        'name' => $_POST['name'][$id] ?? '',
+                        'font_family' => $_POST['font_family'][$id] ?? '',
+                        'css_url' => $_POST['css_url'][$id] ?? '',
+                    ];
+                }
             }
 
             $value = json_encode([
