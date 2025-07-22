@@ -1873,10 +1873,20 @@ class AdminSettings extends Controller {
             $_POST['vcards_is_enabled'] = (int) isset($_POST['vcards_is_enabled']);
             $_POST['events_is_enabled'] = (int) isset($_POST['events_is_enabled']);
             $_POST['static_is_enabled'] = (int) isset($_POST['static_is_enabled']);
-            /* START of new code block */
-            $_POST['flipbooks_is_enabled'] = (int) isset($_POST['flipbooks_is_enabled']);
-            $_POST['flipbooks_file_size_limit'] = $_POST['flipbooks_file_size_limit'] > get_max_upload() || $_POST['flipbooks_file_size_limit'] < 0 ? get_max_upload() : (float) $_POST['flipbooks_file_size_limit'];
+           /* START of new code block */
+            $_POST['flipbooks_is_enabled'] = isset($_POST['flipbooks_is_enabled']) ? 1 : 0;
+
+            $_POST['flipbooks_file_size_limit'] =
+                isset($_POST['flipbooks_file_size_limit']) && is_numeric($_POST['flipbooks_file_size_limit'])
+                && $_POST['flipbooks_file_size_limit'] > 0
+                    ? (
+                        $_POST['flipbooks_file_size_limit'] > get_max_upload()
+                            ? get_max_upload()
+                            : (float) $_POST['flipbooks_file_size_limit']
+                    )
+                    : 0;
             /* END of new code block */
+
             $_POST['claim_url_is_enabled'] = (int) isset($_POST['claim_url_is_enabled']);
             $_POST['claim_url_type'] = in_array($_POST['claim_url_type'], ['link', 'biolink', 'file', 'vcard', 'event', 'static']) ? $_POST['claim_url_type'] : 'link';
             $_POST['pixels_is_enabled'] = (int) isset($_POST['pixels_is_enabled']);
