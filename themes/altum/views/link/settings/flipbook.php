@@ -57,7 +57,7 @@
                 </div>
             <?php endif ?>
 
-                        <div class="form-group">
+            <div class="form-group">
                 <label for="pdf"><i class="fas fa-fw fa-file-pdf fa-sm text-muted mr-1"></i> <?= l('link.settings.flipbook.pdf') ?></label>
                 <?php if(!empty($data->link->settings->pdf)): ?>
                     <div class="mb-3">
@@ -233,7 +233,6 @@
 
 <?php $html = ob_get_clean() ?>
 
-
 <?php ob_start() ?>
 <script>
     /* color_picker_js */
@@ -311,4 +310,6 @@
         event.preventDefault();
     })
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php $javascript = ob_get_clean() ?>
+
+<?php return (object) ['html' => $html, 'javascript' => $javascript] ?>
