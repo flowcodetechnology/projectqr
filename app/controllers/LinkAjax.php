@@ -814,7 +814,7 @@ class LinkAjax extends Controller {
         Response::json(l('global.success_message.create2'), 'success', ['url' => url('link/' . $link_id)]);
     }
         /* START of new flipbook code block */
-    private function create_flipbook() {
+        private function create_flipbook() {
         if(!settings()->links->flipbooks_is_enabled) {
             Response::json(l('global.error_message.basic'), 'error');
         }
@@ -825,14 +825,14 @@ class LinkAjax extends Controller {
             Response::json(l('create_link_modal.error_message.main_domain_is_disabled'), 'error');
         }
 
-        /* Check if custom domain is set */
-        $domain_id = $this->get_domain_id($_POST['domain_id'] ?? false);
-
         /* Make sure that the user didn't exceed the limit */
         $user_total_flipbooks = database()->query("SELECT COUNT(*) AS `total` FROM `links` WHERE `user_id` = {$this->user->user_id} AND `type` = 'flipbook'")->fetch_object()->total;
         if($this->user->plan_settings->flipbooks_limit != -1 && $user_total_flipbooks >= $this->user->plan_settings->flipbooks_limit) {
             Response::json(l('global.info_message.plan_feature_limit'), 'error');
         }
+
+        /* Check if custom domain is set */
+        $domain_id = $this->get_domain_id($_POST['domain_id'] ?? false);
 
         /* Check for duplicate url if needed */
         if($_POST['url']) {
@@ -844,7 +844,12 @@ class LinkAjax extends Controller {
         /* Start the creation process */
         $url = $_POST['url'] ?? mb_strtolower(string_generate(settings()->links->random_url_length ?? 7));
         $type = 'flipbook';
-        $settings = json_encode([]);
+        $settings = json_encode([
+            'password' => null,
+            'sensitive_content' => false,
+            'clicks_limit' => null,
+            'expiration_url' => null,
+        ]);
 
         /* Generate random url if not specified */
         while(db()->where('url', $url)->where('domain_id', $domain_id)->getValue('links', 'link_id')) {
@@ -876,26 +881,6 @@ class LinkAjax extends Controller {
         cache()->deleteItem('links?user_id=' . $this->user->user_id);
 
         Response::json(l('global.success_message.create2'), 'success', ['url' => url('link/' . $link_id)]);
-    }
-    /* END of new flipbook code block */
-
-    private function update() {
-        /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('update.links')) {
-            Response::json(l('global.info_message.team_no_access'), 'error');
-        }
-
-        if(empty($_POST)) {
-            die();
-        }
-
-        /* Check for possible errors */
-        if(!array_key_exists($_POST['type'], $this->links_types)) {
-            die();
-        }
-
-        $this->{'update_' . $_POST['type']}();
-
     }
 
     private function update_link() {
@@ -2459,7 +2444,7 @@ class LinkAjax extends Controller {
     }
 
         /* START of new code block */
-    private function update_flipbook() {
+        private function update_flipbook() {
         if(!settings()->links->flipbooks_is_enabled) {
             Response::json(l('global.error_message.basic'), 'error');
         }
@@ -2534,12 +2519,7 @@ class LinkAjax extends Controller {
         $db_file = \Altum\Uploads::process_upload($flipbook->pdf, 'flipbooks', 'pdf', 'pdf_remove', $this->user->plan_settings->flipbooks_file_size_limit ?? settings()->links->flipbooks_file_size_limit, 'json_error');
         $refresh = $db_file != $flipbook->pdf;
 
-        $settings = [
-            'password' => $_POST['password'],
-            'sensitive_content' => $_POST['sensitive_content'],
-        ];
-
-        /* Process flipbook settings */
+        /* Settings that will be stored in the flipbooks table */
         $flipbook_settings = [
             'pdf' => $db_file,
             'start_page' => (int) $_POST['start_page'] > 0 ? (int) $_POST['start_page'] : 1,
@@ -2554,7 +2534,13 @@ class LinkAjax extends Controller {
             'sound_on_turn' => (int) isset($_POST['sound_on_turn']),
         ];
 
-        $settings = json_encode($settings);
+        /* Settings that will be stored in the main links table */
+        $settings = json_encode([
+            'password' => $_POST['password'],
+            'sensitive_content' => $_POST['sensitive_content'],
+            'clicks_limit' => null,
+            'expiration_url' => null,
+        ]);
 
         db()->where('link_id', $_POST['link_id'])->update('links', [
             'project_id' => $_POST['project_id'],
@@ -2576,7 +2562,7 @@ class LinkAjax extends Controller {
         cache()->deleteItemsByTag('link_id=' . $link->link_id);
         cache()->deleteItem('links?user_id=' . $this->user->user_id);
 
-        Response::json(l('global.success_message.update2'), 'success', ['url' => $url, 'refresh' => $refresh]);
+        Response::json(l('global.success_message.update2'), 'success', ['details' => ['url' => $url, 'refresh' => $refresh]]);
     }
     /* END of new code block */
 
