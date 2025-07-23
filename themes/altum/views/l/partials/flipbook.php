@@ -94,17 +94,22 @@ if(
     default_options.hideControls = hide_controls.join(',');
 
     $(document).ready(function () {
-        let flipbookOptions = {
-            ...default_options,
-            source: '<?= \Altum\Uploads::get_full_url('flipbooks') . $data->link->settings->pdf ?>',
-            assets: {
-                js: "<?= ASSETS_FULL_URL . 'js/libs/' ?>",
-                css: "<?= ASSETS_FULL_URL . 'css/' ?>",
-                sound: "<?= ASSETS_FULL_URL . 'sound/' ?>",
-                images: "<?= ASSETS_FULL_URL . 'images/' ?>"
-            }
-        };
-        $("#DF_Book_Container").flipBook(flipbookOptions);
-    });
+    let flipbookOptions = {
+        ...default_options,
+        source: {
+            url: '<?= \Altum\Uploads::get_full_url('flipbooks') . $data->link->settings->pdf ?>',
+            type: 'pdf'
+        },
+        assets: {
+            js: "<?= ASSETS_FULL_URL . 'js/libs/' ?>",
+            css: "<?= ASSETS_FULL_URL . 'css/' ?>",
+            sound: "<?= ASSETS_FULL_URL . 'sound/' ?>",
+            images: "<?= ASSETS_FULL_URL . 'images/' ?>"
+        }
+    };
+
+    $("#DF_Book_Container").flipBook(flipbookOptions);
+});
+
 </script>
 <?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
