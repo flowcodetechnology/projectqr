@@ -93,19 +93,23 @@ if(
     <?php endif; ?>
 
     $(document).ready(function () {
-    $("#DF_Book_Container").flipBook({
-        ...default_options,
-        source: '<?= \Altum\Uploads::get_full_url('flipbooks') . $data->link->settings->pdf ?>',
-
-            // Optional, only if you moved libraries manually:
+        let flipbookOptions = {
+            ...default_options,
+            source: '<?= \Altum\Uploads::get_full_url('flipbooks') . $data->link->settings->pdf ?>',
             assets: {
                 js: "<?= ASSETS_FULL_URL . 'js/libs/' ?>",
                 css: "<?= ASSETS_FULL_URL . 'css/' ?>",
                 sound: "<?= ASSETS_FULL_URL . 'sound/' ?>",
                 images: "<?= ASSETS_FULL_URL . 'images/' ?>"
             }
-        });
+        };
+
+        <?php if($data->link->settings->pdf_password): ?>
+        flipbookOptions.password = '<?= $data->link->settings->pdf_password ?>';
+        <?php endif; ?>
+
+        $("#DF_Book_Container").flipBook(flipbookOptions);
     });
 
-</script>
+
 <?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
