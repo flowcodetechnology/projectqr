@@ -104,11 +104,6 @@ if(
                 images: "<?= ASSETS_FULL_URL . 'images/' ?>"
             }
         };
-
-        <?php if($data->link->settings->pdf_password): ?>
-        flipbookOptions.password = '<?= $data->link->settings->pdf_password ?>';
-        <?php endif; ?>
-
         $("#DF_Book_Container").flipBook(flipbookOptions);
     });
 </script>
