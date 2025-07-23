@@ -30,6 +30,9 @@ RewriteRule ^(.+)$ index.php?altum=$1 [QSA,L]
         Header set Access-Control-Allow-Origin "*"
         Header set Access-Control-Allow-Methods "GET"
         Header set Access-Control-Allow-Headers "Content-Type"
+        AddType application/pdf .pdf
+        Header set X-Content-Type-Options "nosniff"
+
     </FilesMatch>
 </IfModule>
 
