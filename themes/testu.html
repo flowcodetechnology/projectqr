@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>dFlip Test</title>
+
+    <!-- Required Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+
+    <!-- dFlip Pro Trial - Local Assets -->
+    <link href="/assets/css/dflip.min.css" rel="stylesheet">
+    <link href="/assets/css/themify-icons.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Flipbook Container -->
+    <div id="DF_Book_Container"></div>
+
+    <!-- dFlip Pro Trial JS -->
+    <script src="/assets/js/dflip.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#DF_Book_Container").flipBook({
+                source: "https://mailer.flowcode.co.ke/uploads/flipbooks/bzrsp.pdf",
+                height: "90vh",
+                webgl: true
+            });
+        });
+    </script>
+</body>
+</html>
