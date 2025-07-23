@@ -95,7 +95,10 @@ if(
     $(document).ready(function () {
         $("#DF_Book_Container").flipBook({
             ...default_options,
-            source: '<?= \Altum\Uploads::get_full_url('flipbooks') . $data->link->settings->pdf ?>',
+            source: {
+                url: '<?= \Altum\Uploads::get_full_url('flipbooks') . $data->link->settings->pdf ?>',
+                type: 'pdf'
+            },
         });
     });
 </script>
