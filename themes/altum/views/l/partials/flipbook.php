@@ -95,20 +95,17 @@ if(
     $(document).ready(function () {
     $("#DF_Book_Container").flipBook({
         ...default_options,
-        source: {
-            url: '<?= \Altum\Uploads::get_full_url('flipbooks') . $data->link->settings->pdf ?>',
-            type: 'pdf'
-        },
+        source: '<?= \Altum\Uploads::get_full_url('flipbooks') . $data->link->settings->pdf ?>',
 
-        // 🔧 Tell dFlip where to find its required assets
-        assets: {
-            js: "<?= ASSETS_FULL_URL . 'js/libs/' ?>",
-            css: "<?= ASSETS_FULL_URL . 'css/' ?>",
-            sound: "<?= ASSETS_FULL_URL . 'sound/' ?>",
-            images: "<?= ASSETS_FULL_URL . 'images/' ?>"
-        }
+            // Optional, only if you moved libraries manually:
+            assets: {
+                js: "<?= ASSETS_FULL_URL . 'js/libs/' ?>",
+                css: "<?= ASSETS_FULL_URL . 'css/' ?>",
+                sound: "<?= ASSETS_FULL_URL . 'sound/' ?>",
+                images: "<?= ASSETS_FULL_URL . 'images/' ?>"
+            }
+        });
     });
-});
 
 </script>
 <?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
