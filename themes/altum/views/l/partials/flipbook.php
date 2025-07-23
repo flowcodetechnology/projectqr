@@ -75,22 +75,23 @@ if(
         controlsPosition: DFLIP.CONTROLSPOSITION.BOTTOM,
         controlsTransparent: true,
         allControls: 'altPrev,pageNumber,altNext,play,outline,thumbnail,zoomIn,zoomOut,fullScreen,share,download,print,more,pageMode,startPage,endPage,sound',
-        hideControls: 'annotation,search',
+        hideControls: 'annotation,search'
     };
 
+    // Apply branding logo if available
+    <?php if($this->user->plan_settings->flipbook_custom_branding && !empty($this->user->preferences->white_label_logo)): ?>
+    default_options.logo = '<?= \Altum\Uploads::get_full_url('white_label_logo') . $this->user->preferences->white_label_logo ?>';
+    default_options.logoHeight = 40;
+    <?php endif; ?>
+
+    // Additional hide controls based on user settings
     let hide_controls = ['annotation', 'search'];
     <?php if(!$data->link->settings->display_download) { echo "hide_controls.push('download');"; } ?>
     <?php if(!$data->link->settings->display_print) { echo "hide_controls.push('print');"; } ?>
     <?php if(!$data->link->settings->display_thumbnails) { echo "hide_controls.push('thumbnail', 'outline');"; } ?>
     <?php if(!$data->link->settings->display_zoom) { echo "hide_controls.push('zoomIn', 'zoomOut');"; } ?>
     <?php if(!$data->link->settings->display_fullscreen) { echo "hide_controls.push('fullScreen');"; } ?>
-
     default_options.hideControls = hide_controls.join(',');
-
-    <?php if($this->user->plan_settings->flipbook_custom_branding && !empty($this->user->preferences->white_label_logo)): ?>
-    default_options.logo = '<?= \Altum\Uploads::get_full_url('white_label_logo') . $this->user->preferences->white_label_logo ?>';
-    default_options.logoHeight = 40;
-    <?php endif; ?>
 
     $(document).ready(function () {
         let flipbookOptions = {
@@ -108,8 +109,7 @@ if(
         flipbookOptions.password = '<?= $data->link->settings->pdf_password ?>';
         <?php endif; ?>
 
-            $("#DF_Book_Container").flipBook(flipbookOptions);
-});
+        $("#DF_Book_Container").flipBook(flipbookOptions);
+    });
 </script>
 <?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
-
