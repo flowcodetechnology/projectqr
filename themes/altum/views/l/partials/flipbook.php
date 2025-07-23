@@ -93,9 +93,12 @@ if(
     <?php endif; ?>
 
     $(document).ready(function () {
+        <pre>DEBUG PDF FILE: <?= $data->link->settings->pdf ?></pre>
+
         $("#DF_Book_Container").flipBook({
             ...default_options,
             source: '<?= \Altum\Uploads::get_full_url('flipbooks') . $data->link->settings->pdf ?>',
+            type: "pdf"
         });
     });
 </script>
