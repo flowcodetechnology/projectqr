@@ -108,8 +108,8 @@ if(
         flipbookOptions.password = '<?= $data->link->settings->pdf_password ?>';
         <?php endif; ?>
 
-        $("#DF_Book_Container").flipBook(flipbookOptions);
-    });
-
-
+            $("#DF_Book_Container").flipBook(flipbookOptions);
+});
+</script>
 <?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+
