@@ -98,7 +98,9 @@ if(
         $("#DF_Book_Container").flipBook({
             ...default_options,
             source: '<?= \Altum\Uploads::get_full_url('flipbooks') . $data->link->settings->pdf ?>',
-            type: "pdf"
+            onPageChange: function (page) {
+                //console.log(page);
+            },
         });
     });
 </script>
